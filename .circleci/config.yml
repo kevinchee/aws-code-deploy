@@ -1,25 +1,21 @@
 version: 2.1
-
 # add your orb below, to be used in integration tests (note: a @dev:alpha
 # release must exist; you'll need to publish manually at least once)
 # you can use scripts/publish-alpha.sh to publish a @dev:alpha release
 orbs:
   <orb-name>: <orb-namespace>/<orb-name>@dev:alpha
   orb-tools: circleci/orb-tools@8.27.3
-
 workflows:
   # this `lint-pack_validate_publish-dev` workflow will run on any commit
   lint-pack_validate_publish-dev:
     jobs:
       # lint your destructured orb YAML files
       - orb-tools/lint
-
       # pack your orb YAML files to a single orb.yml
       # validate the orb.yml file to ensure it is well-formed
       - orb-tools/pack:
           requires:
             - orb-tools/lint
-
       # release dev version of orb, for testing & possible publishing
       # requires a CircleCI API token to be stored as CIRCLE_TOKEN (default)
       # https://circleci.com/docs/2.0/managing-api-tokens
@@ -29,7 +25,6 @@ workflows:
           orb-name: <orb-namespace>/<orb-name>
           requires:
             - orb-tools/pack
-
       # trigger an integration workflow to test the dev version of your orb
       # an SSH key must be stored in your orb's repository and in CircleCI
       # (add the public key as a read/write key on GitHub; add the private
@@ -42,7 +37,6 @@ workflows:
           filters:
             branches:
               ignore: master
-
       # by default, the 1st job (above) will trigger only integration tests;
       # the 2nd job (below) may also publish a production orb version
       - orb-tools/trigger-integration-workflow:
@@ -55,7 +49,6 @@ workflows:
           filters:
             branches:
               only: master
-
   # this `integration-tests_prod-release` workflow will ignore commits
   # it is only triggered by git tags, which are created in the job above
   # integration-tests_prod-release:
@@ -66,7 +59,6 @@ workflows:
   #     # - once, for integration tests triggered by non-master-branch commits
   #     # - and again, for tests triggered by commits to master
   #     # - only commits to master should potentially trigger a prod release
-
   #     # patch, minor, or major publishing
   #     - orb-tools/dev-promote-prod:
   #         name: dev-promote-patch
@@ -80,7 +72,6 @@ workflows:
   #             ignore: /.*/
   #           tags:
   #             only: /master-patch.*/
-
   #     - orb-tools/dev-promote-prod:
   #         name: dev-promote-minor
   #         release: minor
@@ -94,7 +85,6 @@ workflows:
   #             ignore: /.*/
   #           tags:
   #             only: /master-minor.*/
-
   #     - orb-tools/dev-promote-prod:
   #         name: dev-promote-major
   #         release: major
@@ -108,14 +98,12 @@ workflows:
   #             ignore: /.*/
   #           tags:
   #             only: /master-major.*/
-
 # yaml anchor filters
 integration-dev_filters: &integration-dev_filters
   branches:
     ignore: /.*/
   tags:
     only: /integration-.*/
-
 integration-master_filters: &integration-master_filters
   branches:
     ignore: /.*/

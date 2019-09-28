@@ -2,10 +2,8 @@
 description: Deploy an application to AWS CodeDeploy
 usage:
   version: 2.1
-
   orbs:
     aws-code-deploy: circleci/aws-code-deploy@1.0.0
-
   workflows:
     deploy_application:
       jobs:
